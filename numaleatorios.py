@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import math
+import random
 import itertools
 
 class Aleatorio:
 
 
-    def __init__(self, archivo):
+    def __init__(self, archivo="./series.txt"):
         try:
             f = open(archivo, 'r')
             print("El archivo " + archivo + " fue abierto.")
@@ -117,12 +118,16 @@ class Aleatorio:
         return (x0, m, a, c, lnum, True)
 
     def get_na (self):
-        if self.lna == []:
-            f = open(self.archivo, 'r')
-            x0, self.m, a, c, lnum, bool = self.getlistnumale(f)
-            self.lna = lnum
-        self.i = self.i + 1
-        return ((self.lna.pop(0) * 1.0) / self.m)
+        return random.random()
+        # if self.lna == []:
+        #     f = open(self.archivo, 'r')
+        #     x0, self.m, a, c, lnum, bool = self.getlistnumale(f)
+        #     self.lna = lnum
+        # self.i = self.i + 1
+        # random_number = ((self.lna.pop(0) * 1.0) / self.m)
+        # if(random_number==0):
+        #     random_number = 0.000001
+        # return random_number
 
     def kolmogorov_smirnov(self):
         cont = 0
@@ -495,14 +500,12 @@ class Aleatorio:
         X = -B * (math.log(R))
         return X
 
-    def merlang(self,B):
-        print ("Numero de corridas: ")
-        n = int(input())
+    def merlang(self,B, k):
         multiplicatoria=1.0
-        for i in range(0,n):
+        for i in range(0,k):
             R=self.get_na()
             multiplicatoria=multiplicatoria*R
-        x=(B/i)*abs(math.log(multiplicatoria))
+        x=(B/k)*abs(math.log(multiplicatoria))
         return x
 
     def weibull(self, A, B):
@@ -562,16 +565,16 @@ class Aleatorio:
         X = Y1 / (Y1 + Y2)
         print ("Variable Beta: " + str(X))
 
-    def triangular(self, c):
+    def triangular(self, a,b ,c):
         if c<0 or c>1:
             print ("Error: El argumento c deve estar entre 0 y 1")
             return False
         R = self.get_na()
         if R <= c:
-            X = math.sqrt(c * R)
+            X = a+ math.sqrt(c * R)
             return X
         else:
-            X = 1-(math.sqrt((1-c) * (1-R)))
+            X = b-(math.sqrt((b-c) * (1-R)))
             return X
 
     def bernoulli(self, p):
@@ -617,11 +620,11 @@ class Aleatorio:
             X += i
         return X
         
-    def poisson(self, y):
+    def poisson(self, y, TT=None):
         i = 0
         t = 0
-        print ("Valor del tiempo")
-        TT = int(input())
+        if(not TT):
+            TT = int(input("Valor del tiempo"))
         while t < TT:
             R = self.get_na()
             xt = -(1 / y) * (math.log(R))
